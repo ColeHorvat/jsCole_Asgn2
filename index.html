@@ -68,11 +68,11 @@
 	*	Registration of event listeners for double click and click
 	*/
 		
-    $(document).dblclick(function(e) {  // for double click event    
+    jsCole(document).dblclick(function(e) {  // for double click event    
 		if (Kolich.Selector.getSelected() != '')
 			dblclickHandler(e);  // You need to implement this.
 	});
-    $(document).click( function(e) { //  // for click event
+    jsCole(document).click( function(e) { //  // for click event
 		clickHandler(e);  // You need to implement this.
 	});
 
@@ -83,7 +83,7 @@
     function clickHandler(e)  // e: click event
     {
         // remove the menu
-        $("#menu").hide();
+        jsCole("#menu").hide();
     }
 
     function dblclickHandler(e)  // e: click event
@@ -102,20 +102,20 @@
         let x = e.pageX + 'px';  // e.pageX and e.pageY for mouse position
         let y = (e.pageY - 25) + 'px';  // a bit above
         
-        $("#menu").animate({ left: x, top: y}).fadeIn("fast")
+        jsCole("#menu").animate({ left: x, top: y}).fadeIn("fast")
         
 
         // register callback functions for yellow, red, blue, white buttons
-        $('#yellow').click(function() { colorSelected('Yellow'); });
-        $('#red').click(function() { colorSelected('Red'); });
-        $('#blue').click(function() { colorSelected('Blue'); });
-        $('#white').click(function() { colorSelected('White'); });
+        jsCole('#yellow').click(function() { colorSelected('Yellow'); });
+        jsCole('#red').click(function() { colorSelected('Red'); });
+        jsCole('#blue').click(function() { colorSelected('Blue'); });
+        jsCole('#white').click(function() { colorSelected('White'); });
     }
 
     function colorSelected(color) 
     {
         // remove the menu quickly
-        $("#menu").hide();
+        jsCole("#menu").hide();
 
         // change the color of the selected word - create a new element; append the element; remove the old element(s)
         var selObj = Kolich.Selector.getSelected();

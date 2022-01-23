@@ -33,22 +33,51 @@ function jsCole_document(thispreserved) {
                     thispreserved.jsCole_callback();
                 })
             }
-        }
+        },
+
+        click: function(callback) {
+            document.addEventListener('click', function() {
+                this.jsCole_callback = callback;
+                this.jsCole_callback();
+            });
+        },
+
+        dblclick: function(callback) {
+            document.addEventListener('dblclick', function() {
+                this.jsCole_callback = callback;
+                this.jsCole_callback();
+            });
+        },
     }
 }
 
 function jsCole_htmlelement(element) {
     return {
         on: function(event, callback) {
-
+            for (var i = 0; i < this.jsCole_elements.length; i++) {
+                element[i].addEventListener(event, function() {
+                    this.jsCole_callback = callback;
+                    this.jsCole_callback();
+                });
+            }
         },
 
         click: function(callback) {
-
+            for (var i = 0; i < this.jsCole_elements.length; i++) {
+                element[i].addEventListener('click', function() { 
+                    this.jsCole_callback = callback;
+                    this.jsCole_callback();
+                });
+            }
         },
 
         dblclick: function(callback) {
-
+            for (var i = 0; i < this.jsCole_elements.length; i++) {
+                element[i].addEventListener('dblclick', function() { 
+                    this.jsCole_callback = callback;
+                    this.jsCole_callback();
+                });
+            }
         },
 
         css: function(property, value) {
