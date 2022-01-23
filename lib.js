@@ -4,29 +4,22 @@ function jsCole(x) {
     if(x == 'document') {
         return new jsCole_document(x);
     } else if(x instanceof HTMLElement) {
+        return new jsCole_htmlelement(x)
+    } else if(typeof x == 'string') {
         return new jsCole_htmlselector(x);
-    } else if()
-
-    return {
-        version: function() {
-            console.log('jsCole - ' + VERSION);
+    } else if(x == undefined) {
+        return undefined;
+    } else {
+        return {
+            version: function() {
+                console.log('jsCole - ' + VERSION);
+            }
         }
     }
+
+
 }
 
-// function check(x) {
-//     if(x == document) {
-//         callback('document')
-//     } else if (typeof x == 'string') {
-//         callback('string')
-//     } else if (x instanceof HTMLElement) {
-//         callback('HTMLElement')
-//     } else if (x == undefined) {
-//         callback('undefined')
-//     } else {
-//         callback('something else')
-//     }
-// }
 
 function jsCole_document(thispreserved) {
     return {
@@ -39,6 +32,42 @@ function jsCole_document(thispreserved) {
                     thispreserved.jsCole_callback = callback;
                     thispreserved.jsCole_callback();
                 })
+            }
+        }
+    }
+}
+
+function jsCole_htmlelement(element) {
+    return {
+        on: function(event, callback) {
+
+        },
+
+        click: function(callback) {
+
+        },
+
+        dblclick: function(callback) {
+
+        },
+
+        css: function(property, value) {
+            window.getComputedStyle(this.jsCole_elements).getPropertyValue(property) == value;
+        },
+
+        hide: function() {
+            window.getComputedStyle(this.jsCole_elements).getPropertyValue('display') == 'none'
+        },
+
+        show: function() {
+            window.getComputedStyle(this.jsCole_elements).getPropertyValue('display') == 'block'
+        },
+
+        toggle: function() {
+            if(window.getComputedStyle(element).getPropertyValue('display') == 'block') {
+                element.style.display = 'none'
+            } else {
+                element.style.display = 'block'
             }
         }
     }
@@ -57,16 +86,31 @@ function jsCole_htmlselector(selector) {
 
     return {
 
-        on: function() {
-
+        on: function(event, callback) {
+            for (var i = 0; i < this.jsCole_elements.length; i++) {
+                this.jsCole_elements[i].addEventListener(event, function() {
+                    this.jsCole_callback = callback;
+                    this.jsCole_callback();
+                });
+            }
         },
 
         click: function(callback) {
-
+            for (var i = 0; i < this.jsCole_elements.length; i++) {
+                this.jsCole_elements[i].addEventListener('click', function() { 
+                    this.jsCole_callback = callback;
+                    this.jsCole_callback();
+                });
+            }
         },
 
         dblclick: function(callback) {
-
+            for (var i = 0; i < this.jsCole_elements.length; i++) {
+                this.__TRUjQ_elements[i].addEventListener('dblclick', function() { 
+                    this.jsCole_callback = callback;
+                    this.jsCole_callback();
+                });
+            }
         },
 
         css: function(property, value) {
