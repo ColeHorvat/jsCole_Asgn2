@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<!-- saved from url=(0089)https://cs.tru.ca/~mlee/comp4620/Winter2022/9.%20Seminars/W1_text_selection_students.html -->
+<head>
+    <style>
+        #menu {
+            display: none;
+            position: absolute;
+            height: 25px;
+            width: 120px;
+            /*
+            border-style: solid;
+            border-width: 2px;
+            top: 100px;
+            left: 100px;
+            */
+            z-index: 999999;
+        }
+
+        
+    </style>
+    <script src="/lib.js"></script>
+</head>
+
+<body>
+    <div id="menu">
+        <button id="yellow" style="display: inline; width: 25px; background-color: Yellow">Y</button>
+        <button id="red" style="display: inline; width: 25px; background-color: Red">R</button>
+        <button id="blue" style="display: inline; width: 25px; background-color: Blue">B</button>
+        <button id="white" style="display: inline; width: 25px; background-color: White">W</button>
+    </div>
+
+    <p>
+    If you only wanted this to work on select paragraphs, you would change the selector to p.myclass or something like that. This hinges on the fact double clicking a word highlights it in browsers. Not really sure if it's exactly how answers.com does it, to be honest.
+    </p>
+    <p>
+    In Mozilla, Safari and Opera userSelection now is a Selection object, while in Internet Explorer it's a Text Range object. This difference will remain valid for the rest of your script: Internet Explorer's Text Ranges are fundamentally different from Mozilla's Selection and W3C's Range objects, and all other code that you write will require a branch for IE and a branch for all other browsers.    </p>
+
+    <p>
+        The FitnessGram Pacer test is a multistage aerobic capacity test that progressively gets more difficult as it continues. The 20 meter Pacer test will begin in 30 seconds. Line up at the start. The running speed starts slowly, but gets faster each minute after you hear this signal *boop*. A single lap should be completed each time you hear this sound *ding*. Remember to run in a straight line, and run as long as possible. The second time you fail to complete a lap before the sound, your test is over. The test will begin on the word start. On your mark, get ready, start.
+    </p>
+
+<script>
+		
+    /*
+    *   It is just for the reference for this code. You don't have to worry what Kolich and Range are.
+    *   Use JavaScript and jQuery to Get User Selected Text
+    *       https://github.com/markkolich/blog/blob/master/content/entries/use-javascript-and-jquery-to-get-user-selected-text.md
+    */
+        
+    if(!window.Kolich){
+        Kolich = {};
+    }
+
+    Kolich.Selector = {};
+    Kolich.Selector.getSelected = function(){
+		var t = '';
+        if(window.getSelection){  // non IE browsers
+            t = window.getSelection();
+        }else if(document.getSelection){
+            t = document.getSelection();
+        }else if(document.selection){
+            t = document.selection.createRange().text;
+        }
+        return t;
+    }
+
+	/*
+	*	Registration of event listeners for double click and click
+	*/
+		
+    $(document).dblclick(function(e) {  // for double click event    
+		if (Kolich.Selector.getSelected() != '')
+			dblclickHandler(e);  // You need to implement this.
+	});
+    $(document).click( function(e) { //  // for click event
+		clickHandler(e);  // You need to implement this.
+	});
+
+    /*
+    *    Event listeners
+    */
+
+    function clickHandler(e)  // e: click event
+    {
+        // remove the menu
+        $("#menu").hide();
+    }
+
+    function dblclickHandler(e)  // e: click event
+    {
+        // display the menu
+        displayMenu(e);
+    }
+
+	/*
+	*
+	*/
+		
+    function displayMenu(e)  // e: dblclick event
+    {
+        // decide the position of the menu, and display it a bit above (Use fadeIn)
+        let x = e.pageX + 'px';  // e.pageX and e.pageY for mouse position
+        let y = (e.pageY - 25) + 'px';  // a bit above
+        
+        $("#menu").animate({ left: x, top: y}).fadeIn("fast")
+        
+
+        // register callback functions for yellow, red, blue, white buttons
+        $('#yellow').click(function() { colorSelected('Yellow'); });
+        $('#red').click(function() { colorSelected('Red'); });
+        $('#blue').click(function() { colorSelected('Blue'); });
+        $('#white').click(function() { colorSelected('White'); });
+    }
+
+    function colorSelected(color) 
+    {
+        // remove the menu quickly
+        $("#menu").hide();
+
+        // change the color of the selected word - create a new element; append the element; remove the old element(s)
+        var selObj = Kolich.Selector.getSelected();
+        var selRange = selObj.getRangeAt(0);
+        var newElement = document.createElement("span");
+        var documentFragment = selRange.extractContents();
+        newElement.appendChild(documentFragment);
+        newElement.style.setProperty('background-color', color);
+        selRange.insertNode(newElement);
+        selObj.removeAllRanges();
+    }        
+</script>
+
+</body></html>
