@@ -1,20 +1,20 @@
 function jsCole(x) {
     const VERSION = '0.0.1';
 
-    if(x == 'document') {
-        return new jsCole_document(x);
+    if(x == document) {
+        return jsCole_document(x);
     } else if(x instanceof HTMLElement) {
-        return new jsCole_htmlelement(x)
+        return jsCole_htmlelement(x)
     } else if(typeof x == 'string') {
-        return new jsCole_htmlselector(x);
+        return jsCole_htmlselector(x);
     } else if(x == undefined) {
-        return undefined;
-    } else {
         return {
             version: function() {
-                console.log('jsCole - ' + VERSION);
+                return VERSION;
             }
         }
+    } else {
+        return 'not recognized'
     }
 
 
@@ -52,48 +52,53 @@ function jsCole_document(thispreserved) {
 }
 
 function jsCole_htmlelement(element) {
+
     return {
         on: function(event, callback) {
-            for (var i = 0; i < this.jsCole_elements.length; i++) {
-                element[i].addEventListener(event, function() {
-                    this.jsCole_callback = callback;
-                    this.jsCole_callback();
-                });
-            }
+            element.addEventListener(event, function() {
+               this.jsCole_callback = callback;
+               this.jsCole_callback();
+            });
         },
 
         click: function(callback) {
-            for (var i = 0; i < this.jsCole_elements.length; i++) {
-                element[i].addEventListener('click', function() { 
-                    this.jsCole_callback = callback;
-                    this.jsCole_callback();
-                });
-            }
+            element.addEventListener('click', function() { 
+                this.jsCole_callback = callback;
+                this.jsCole_callback();
+            });
         },
 
         dblclick: function(callback) {
-            for (var i = 0; i < this.jsCole_elements.length; i++) {
-                element[i].addEventListener('dblclick', function() { 
-                    this.jsCole_callback = callback;
-                    this.jsCole_callback();
-                });
-            }
+            element.addEventListener('dblclick', function() { 
+                this.jsCole_callback = callback;
+                this.jsCole_callback();
+            });
         },
 
         css: function(property, value) {
-            window.getComputedStyle(this.jsCole_elements).getPropertyValue(property) == value;
+            if(value === undefined) 
+                return window.getComputedStyle(element)[property];
+            else
+                element.style.setProperty(property, value);
+            
         },
 
         hide: function() {
-            window.getComputedStyle(this.jsCole_elements).getPropertyValue('display') == 'none'
+            if(getComputedStyle(element).display == 'none' || getComputedStyle(element).display == 'NONE')
+                return;
+            else
+                element.style.display = 'none';
         },
 
         show: function() {
-            window.getComputedStyle(this.jsCole_elements).getPropertyValue('display') == 'block'
+            if(getComputedStyle(element).display == 'block' || getComputedStyle(element).display == 'BLOCK')
+                return;
+            else
+                element.style.display = 'block';
         },
 
         toggle: function() {
-            if(window.getComputedStyle(element).getPropertyValue('display') == 'block') {
+            if(window.getComputedStyle(element).display == 'block') {
                 element.style.display = 'none'
             } else {
                 element.style.display = 'block'
@@ -104,20 +109,23 @@ function jsCole_htmlelement(element) {
 
 function jsCole_htmlselector(selector) {
     selector = selector.trim();
-    
+    elements = [];
+
     if (!selector.startsWith('.') && !selector.startsWith('#')) {
-        this.jsCole_elements = document.getElementsByTagName(selector);
+        elements = document.getElementsByTagName(selector);
     } else if(selector.startsWith('.')) {
-        this.jsCole_elements = document.getElementsByClassName(selector);
+        elements = document.getElementsByClassName(selector.substring(1, selector.length));
     } else {
-        this.jsCole_elements = document.getElementById(selector);
+        elements = [];
+        if(document.getElementById(selector.substring(1, selector.length) != null))
+            elements[0] = document.getElementById(selector.substring(1, selector.length));
     }
 
     return {
 
         on: function(event, callback) {
-            for (var i = 0; i < this.jsCole_elements.length; i++) {
-                this.jsCole_elements[i].addEventListener(event, function() {
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].addEventListener(event, function() {
                     this.jsCole_callback = callback;
                     this.jsCole_callback();
                 });
@@ -125,8 +133,8 @@ function jsCole_htmlselector(selector) {
         },
 
         click: function(callback) {
-            for (var i = 0; i < this.jsCole_elements.length; i++) {
-                this.jsCole_elements[i].addEventListener('click', function() { 
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].addEventListener('click', function() { 
                     this.jsCole_callback = callback;
                     this.jsCole_callback();
                 });
@@ -134,8 +142,8 @@ function jsCole_htmlselector(selector) {
         },
 
         dblclick: function(callback) {
-            for (var i = 0; i < this.jsCole_elements.length; i++) {
-                this.__TRUjQ_elements[i].addEventListener('dblclick', function() { 
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].addEventListener('dblclick', function() { 
                     this.jsCole_callback = callback;
                     this.jsCole_callback();
                 });
@@ -143,15 +151,18 @@ function jsCole_htmlselector(selector) {
         },
 
         css: function(property, value) {
-            window.getComputedStyle(this.jsCole_elements).getPropertyValue(property) == value;
+            for (var i = 0; i < elements.length; i++)
+                elements[i].style.setProperty(property, value);
         },
 
         hide: function() {
-            window.getComputedStyle(this.jsCole_elements).getPropertyValue('display') == 'none'
+            for(var i = 0; i < elements.length; i++)
+                elements[i].style.display = 'none';
         },
 
         show: function() {
-            window.getComputedStyle(this.jsCole_elements).getPropertyValue('display') == 'block'
+            for (var i = 0; i < elements.length; i++)
+                elements[i].style.display = 'block';
         },
 
         toggle: function() {

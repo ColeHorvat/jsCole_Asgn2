@@ -64,10 +64,12 @@
         return t;
     }
 
+    //Log version number
+    console.log(jsCole().version());
+
 	/*
 	*	Registration of event listeners for double click and click
 	*/
-		
     jsCole(document).dblclick(function(e) {  // for double click event    
 		if (Kolich.Selector.getSelected() != '')
 			dblclickHandler(e);  // You need to implement this.
