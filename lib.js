@@ -40,12 +40,13 @@ function jsCole_document(thispreserved) {
                 this.jsCole_callback = callback;
                 this.jsCole_callback();
             });
+            return e;
         },
 
         dblclick: function(callback) {
             document.addEventListener('dblclick', function() {
                 this.jsCole_callback = callback;
-                this.jsCole_callback();
+                this.jsCole_callback(e);
             });
         },
     }
